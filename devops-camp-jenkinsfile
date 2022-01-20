@@ -33,7 +33,9 @@ stages {
 
 
 stage('Application docker build') {
-            steps {withCredentials([usernameColonPassword(credentialsId: 'Student02', variable: 'HARBOR-AUTH')]) {
+            steps 
+		{
+		withCredentials([usernameColonPassword(credentialsId: 'Student02', variable: 'HARBOR-AUTH')]) {
                     script {
                         docker.build('$APP_IMAGE_NAME-$COMMIT_HASH', '-f ./app/Dockerfile ./afs-labs-student')
                         docker.withRegistry('https://$HARBOR_REGISTRY', 'Student02') {
@@ -62,7 +64,8 @@ stage('Application docker build') {
 	}		
 	  	
 	stage('Database docker build') {
-            steps {withCredentials([usernameColonPassword(credentialsId: 'Student02', variable: 'HARBOR-AUTH')]) {
+            steps {
+		 withCredentials([usernameColonPassword(credentialsId: 'Student02', variable: 'HARBOR-AUTH')]) {
                     script {
                         docker.build('$DB_IMAGE_NAME-$COMMIT_HASH', '-f ./db/Dockerfile ./afs-labs-student')
                         docker.withRegistry('https://$HARBOR_REGISTRY', 'Student02') {
