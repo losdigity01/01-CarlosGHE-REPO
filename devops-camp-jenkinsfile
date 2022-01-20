@@ -11,11 +11,7 @@ pipeline {
         DB_IMAGE_NAME = 'db'
     }
 
-dir('01-CarlosGHE-REPO') {
-                    script {
-                        env.COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    }
-                }
+
 				
 
 			
@@ -23,10 +19,20 @@ stages {
         stage('Application repository') {
             steps {
                 echo "Cloning application repository"
-                sh 'git clone https://github.com/losdigity01/01-CarlosGHE-REPO'
-            }
-        }
-        stage('Application docker build') {
+                sh 'git clone https://github.com/losdigity01/01-CarlosGHE-REPO.git'
+                   
+        
+			
+	dir('afs-labs-student') {
+		script {
+		env.COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+}
+}
+}
+}
+
+
+stage('Application docker build') {
             steps {withCredentials([usernameColonPassword(credentialsId: 'Student02', variable: 'HARBOR-AUTH')]) {
                     script {
                         docker.build('$APP_IMAGE_NAME-$COMMIT_HASH', '-f ./app/Dockerfile ./afs-labs-student')
@@ -102,7 +108,7 @@ stages {
         }
     }
 }
-
+}
 
 
 
